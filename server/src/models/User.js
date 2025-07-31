@@ -1,47 +1,49 @@
-const User = require("./User");
-const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-const generateToken = (user) => {
-  return jwt.sign(
-    { userId: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-};
-
-// @route   POST /api/auth/register
-exports.register = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const existing = await User.findOne({ email });
-    if (existing) {
-      return res.status(400).json({ error: "Email already in use" });
-    }
-
-    const user = new User({ email, password });
-    await user.save();
-
-    res.status(201).json({ message: "User registered successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Registration failed" });
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+      match: [/.+@.+\..+/, "Please enter a valid email address"],
+    },
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: 6,
+      select: false, 
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+  },
+  {
+    timestamps: true,
   }
-};
+);
 
-// @route   POST /api/auth/login
-exports.login = async (req, res) => {
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
   try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) return res.status(400).json({ error: "Invalid credentials" });
-
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
-
-    const token = generateToken(user);
-    res.json({ token });
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
   } catch (err) {
-    res.status(500).json({ error: "Login failed" });
+    next(err);
   }
+});
+
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
 };
+
+module.exports = mongoose.model("User", userSchema);
