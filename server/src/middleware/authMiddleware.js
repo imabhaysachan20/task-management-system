@@ -17,4 +17,13 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-module.exports = authMiddleware;
+const adminAuthMiddleware = (req,res,next)=>{
+    const {role} = req.user;
+    if (!role) return res.status(401).json({error:"error"});
+    if (role!=="admin") {
+      return res.status(401).json({error:"access denined"});
+    };
+    next();
+}
+
+module.exports = {authMiddleware,adminAuthMiddleware};
