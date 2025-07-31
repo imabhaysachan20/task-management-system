@@ -12,7 +12,7 @@ const {
 
 router.use(authMiddleware);
 
-router.post("/", upload.array("documents", 3), createTask);
+router.post("/", adminAuthMiddleware, upload.array("documents", 3), createTask);
 router.get("/", getTasks);
 router.get("/:id", getTaskById);
 router.patch("/:id", upload.array("documents", 3), updateTask);
