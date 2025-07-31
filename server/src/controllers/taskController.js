@@ -21,12 +21,32 @@ exports.createTask = async (req, res) => {
 
 exports.getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({ createdBy: req.user.userId });
-    res.json(tasks);
+    const { status, priority, dueDate, sortBy = "createdAt", order = "desc", page = 1, limit = 10 } = req.query;
+
+    const query = { createdBy: req.user.userId };
+
+    if (status) query.status = status;
+    if (priority) query.priority = priority;
+    if (dueDate) query.dueDate = { $lte: new Date(dueDate) };
+
+    const tasks = await Task.find(query)
+      .sort({ [sortBy]: order === "asc" ? 1 : -1 })
+      .skip((page - 1) * limit)
+      .limit(Number(limit));
+
+    const count = await Task.countDocuments(query);
+
+    res.json({
+      total: count,
+      page: Number(page),
+      limit: Number(limit),
+      tasks,
+    });
   } catch (err) {
     res.status(500).json({ error: "Could not fetch tasks" });
   }
 };
+
 
 
 exports.getTaskById = async (req, res) => {
