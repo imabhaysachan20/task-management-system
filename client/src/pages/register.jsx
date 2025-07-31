@@ -3,12 +3,20 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import API from "@/lib/axios";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, UserPlus, Check } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, UserPlus, Check, Shield } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +47,7 @@ export default function Register() {
     setIsLoading(true);
     
     try {
-      await API.post("/auth/register", { email, password });
+      await API.post("/auth/register", { email, password, role });
       alert("Registration successful! You can now log in.");
       navigate("/login");
     } catch (err) {
@@ -167,6 +175,41 @@ export default function Register() {
                   </span>
                 </div>
               )}
+            </div>
+
+            {/* Role Selection */}
+            <div className="space-y-2">
+              <label htmlFor="role" className="text-sm font-medium text-gray-700">
+                Account Type
+              </label>
+              <div className="relative">
+                <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
+                <Select value={role} onValueChange={setRole}>
+                  <SelectTrigger className="pl-10 h-12 border-gray-200 focus:border-green-500 focus:ring-green-500/20">
+                    <SelectValue placeholder="Select account type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div>
+                          <div className="font-medium">User</div>
+                          <div className="text-xs text-gray-500">Standard access</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="admin">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        <div>
+                          <div className="font-medium">Admin</div>
+                          <div className="text-xs text-gray-500">Full access</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Submit Button */}
