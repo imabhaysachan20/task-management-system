@@ -2,7 +2,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import API from "@/lib/axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react";
 
 export default function Login() {
@@ -11,6 +12,10 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
+
+  const from = location.state?.from?.pathname || "/dashboard";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,8 +25,8 @@ export default function Login() {
       const res = await API.post("/auth/login", { email, password });
       const { token } = res.data;
 
-      localStorage.setItem("token", token);
-      navigate("/dashboard");
+      login(token);
+      navigate(from, { replace: true });
     } catch (err) {
       alert(err.response?.data?.error || "Login failed");
     } finally {
