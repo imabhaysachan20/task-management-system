@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LogOut, User } from "lucide-react";
+import { LogOut, Rss, User } from "lucide-react";
 import TaskList from "@/components/TaskList";
 import TaskForm from "@/components/TaskForm";
 import API from "@/lib/axios";
@@ -13,7 +13,8 @@ export default function Dashboard() {
   const fetchTasks = async () => {
     try {
       const res = await API.get("/tasks");
-      setTasks(res.data);
+      console.log(res)
+      setTasks(res.data.tasks);
     } catch (err) {
       alert("Failed to fetch tasks");
     }

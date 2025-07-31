@@ -24,8 +24,6 @@ export default function Register() {
 
   const passwordRequirements = [
     { text: "At least 6 characters", met: password.length >= 6 },
-    { text: "Contains a number", met: /\d/.test(password) },
-    { text: "Contains a letter", met: /[a-zA-Z]/.test(password) },
   ];
 
   const isPasswordValid = passwordRequirements.every(req => req.met);
@@ -62,7 +60,7 @@ export default function Register() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-green-600 to-blue-600 rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-600 rounded-2xl mb-4 shadow-lg">
             <UserPlus className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create account</h1>
@@ -122,11 +120,11 @@ export default function Register() {
                   {passwordRequirements.map((req, index) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                        req.met ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'
+                        req.met ? 'bg-green-100 text-blue-600' : 'bg-gray-100 text-gray-400'
                       }`}>
                         {req.met && <Check className="w-3 h-3" />}
                       </div>
-                      <span className={req.met ? 'text-green-600' : 'text-gray-500'}>
+                      <span className={req.met ? 'text-blue-600' : 'text-gray-500'}>
                         {req.text}
                       </span>
                     </div>
@@ -166,11 +164,11 @@ export default function Register() {
               {confirmPassword && (
                 <div className="flex items-center gap-2 text-sm mt-2">
                   <div className={`w-4 h-4 rounded-full flex items-center justify-center ${
-                    doPasswordsMatch ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                    doPasswordsMatch ? 'bg-green-100 text-blue-600' : 'bg-red-100 text-red-600'
                   }`}>
                     {doPasswordsMatch && <Check className="w-3 h-3" />}
                   </div>
-                  <span className={doPasswordsMatch ? 'text-green-600' : 'text-red-600'}>
+                  <span className={doPasswordsMatch ? 'text-blue-600' : 'text-red-600'}>
                     {doPasswordsMatch ? 'Passwords match' : 'Passwords do not match'}
                   </span>
                 </div>
@@ -185,25 +183,25 @@ export default function Register() {
               <div className="relative">
                 <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 z-10" />
                 <Select value={role} onValueChange={setRole}>
-                  <SelectTrigger className="pl-10 h-12 border-gray-200 focus:border-green-500 focus:ring-green-500/20">
+                  <SelectTrigger className="pl-10 w-full border-gray-200 focus:border-green-500 focus:ring-green-500/20">
                     <SelectValue placeholder="Select account type" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="user">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        
                         <div>
                           <div className="font-medium">User</div>
-                          <div className="text-xs text-gray-500">Standard access</div>
+                          
                         </div>
                       </div>
                     </SelectItem>
                     <SelectItem value="admin">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                        
                         <div>
                           <div className="font-medium">Admin</div>
-                          <div className="text-xs text-gray-500">Full access</div>
+                         
                         </div>
                       </div>
                     </SelectItem>
@@ -216,7 +214,7 @@ export default function Register() {
             <Button
               type="submit"
               disabled={isLoading || !isPasswordValid || !doPasswordsMatch}
-              className="w-full h-12 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
@@ -235,7 +233,7 @@ export default function Register() {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-semibold text-green-600 hover:text-green-700 transition-colors"
+                className="font-semibold text-blue-600 hover:text-blue-700 transition-colors"
               >
                 Sign in
               </Link>
