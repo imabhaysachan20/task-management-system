@@ -7,6 +7,7 @@ exports.createTask = async (req, res) => {
 
     const task = await Task.create({
       ...req.body,
+      assignedTo:(req.user.role==="admin"?req.body.assignedTo:req.user.userId),
       documents: filePaths,
       createdBy: req.user.userId,
     });
@@ -21,9 +22,10 @@ exports.createTask = async (req, res) => {
 
 exports.getTasks = async (req, res) => {
   try {
+    const isAdmin = req.user.role === "admin";
     const { status, priority, dueDate, sortBy = "createdAt", order = "desc", page = 1, limit = 10 } = req.query;
 
-    const query = { createdBy: req.user.userId };
+    const query = isAdmin ? {} : { assignedTo: req.user.userId };
 
     if (status) query.status = status;
     if (priority) query.priority = priority;
@@ -51,11 +53,14 @@ exports.getTasks = async (req, res) => {
 
 exports.getTaskById = async (req, res) => {
   try {
-    const task = await Task.findOne({
-      _id: req.params.id,
-      createdBy: req.user.userId,
-    });
-    if (!task) return res.status(404).json({ error: "Not found" });
+    const task = await Task.findById(req.params.id);
+
+if (!task) return res.status(404).json({ error: "Not found" });
+
+if (req.user.role !== "admin" && task.assignedTo.toString() !== req.user.userId) {
+  return res.status(403).json({ error: "Forbidden" });
+}
+ 
     res.json(task);
   } catch (err) {
     res.status(500).json({ error: "Could not get task" });
@@ -65,16 +70,18 @@ exports.getTaskById = async (req, res) => {
 
 exports.updateTask = async (req, res) => {
   try {
-    const existing = await Task.findOne({
-      _id: req.params.id,
-      createdBy: req.user.userId,
-    });
-    if (!existing) return res.status(404).json({ error: "Not found" });
+    const task = await Task.findById(req.params.id);
+
+if (!task) return res.status(404).json({ error: "Not found" });
+
+if (req.user.role !== "admin" && task.assignedTo.toString() !== req.user.userId) {
+  return res.status(403).json({ error: "Forbidden" });
+}
 
     const filePaths = req.files?.map((f) => f.path) || [];
     const updatedFields = {
       ...req.body,
-      documents: [...(existing.documents || []), ...filePaths].slice(0, 3),
+      documents: [...(task.documents || []), ...filePaths].slice(0, 3)
     };
 
     const updated = await Task.findByIdAndUpdate(req.params.id, updatedFields, {
@@ -89,11 +96,15 @@ exports.updateTask = async (req, res) => {
 
 exports.deleteTask = async (req, res) => {
   try {
-    const task = await Task.findOneAndDelete({
-      _id: req.params.id,
-      createdBy: req.user.userId,
-    });
+    const task = await Task.findById(req.params.id);
+
     if (!task) return res.status(404).json({ error: "Not found" });
+
+    if (req.user.role !== "admin" && task.assignedTo.toString() !== req.user.userId) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    await task.deleteOne();
     res.json({ message: "Task deleted" });
   } catch (err) {
     res.status(500).json({ error: "Could not delete task" });
