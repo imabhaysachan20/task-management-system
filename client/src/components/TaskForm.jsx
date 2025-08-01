@@ -99,10 +99,15 @@ export default function TaskForm({ onTaskCreated }) {
       
       // Append form fields
       Object.keys(formData).forEach(key => {
-        if (formData[key]) {
+        if (formData[key] && formData[key] !== 'self') {
           submitData.append(key, formData[key]);
         }
       });
+      
+      // Handle self-assignment
+      if (formData.assignedTo === 'self') {
+        // Don't append assignedTo - let backend handle self-assignment
+      }
 
       // Append documents
       documents.forEach(file => {
@@ -216,9 +221,10 @@ export default function TaskForm({ onTaskCreated }) {
           </label>
           <Select value={formData.assignedTo} onValueChange={(value) => handleInputChange('assignedTo', value)}>
             <SelectTrigger>
-              <SelectValue placeholder="Select user" />
+              <SelectValue placeholder="Select user (optional)" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="self">Assign to myself</SelectItem>
               {users.map(user => (
                 <SelectItem key={user._id} value={user._id}>
                   {user.email}
