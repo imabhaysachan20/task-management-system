@@ -9,11 +9,9 @@ import {
   Plus,
   ChevronLeft,
   ChevronRight,
-  Trash2,
-  Edit,
-  Calendar,
-  Clock
 } from 'lucide-react'
+import TaskForm from './TaskForm'
+import TaskCard from './TaskCard'
 
 function SingleUser() {
   const { id } = useParams()
@@ -33,16 +31,8 @@ function SingleUser() {
   const [sortBy, setSortBy] = useState('createdAt')
   const [sortOrder, setSortOrder] = useState('desc')
 
-  // Modal states
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [modalMode, setModalMode] = useState('create')
+  const [showTaskForm, setShowTaskForm] = useState(false)
   const [selectedTask, setSelectedTask] = useState(null)
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    dueDate: '',
-    status: 'pending'
-  })
 
   // Fetch user details
   const fetchUser = async () => {
@@ -83,71 +73,49 @@ function SingleUser() {
     fetchTasks()
   }, [id, currentPage, selectedStatus, sortBy, sortOrder])
 
-  // Task CRUD operations
-  const handleCreateTask = async (e) => {
-    e.preventDefault()
-    try {
-      await API.post('/tasks', {
-        ...formData,
-        assignedTo: id
-      })
-      fetchTasks()
-      setIsModalOpen(false)
-      resetForm()
-    } catch (err) {
-      setError('Failed to create task')
+  const handleTaskCreated = () => {
+    setShowTaskForm(false);
+    fetchTasks();
+  };
+
+  const handleTaskUpdated = () => {
+    setSelectedTask(null);
+    fetchTasks();
+  };
+
+  const handleTaskDeleted = () => {
+    fetchTasks();
+  };
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'todo':
+        return 'bg-gray-100 text-gray-800';
+      case 'in-progress':
+        return 'bg-blue-100 text-blue-800';
+      case 'done':
+        return 'bg-green-100 text-green-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
-  }
+  };
 
-  const handleUpdateTask = async (e) => {
-    e.preventDefault()
-    try {
-      await API.put(`/tasks/${selectedTask._id}`, formData)
-      fetchTasks()
-      setIsModalOpen(false)
-      resetForm()
-    } catch (err) {
-      setError('Failed to update task')
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case 'low':
+        return 'bg-gray-100 text-gray-800';
+      case 'medium':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'high':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
-  }
+  };
 
-  const handleDeleteTask = async (taskId) => {
-    if (!window.confirm('Are you sure you want to delete this task?')) return
-    try {
-      await API.delete(`/tasks/${taskId}`)
-      fetchTasks()
-    } catch (err) {
-      setError('Failed to delete task')
-    }
-  }
-
-  const resetForm = () => {
-    setFormData({
-      title: '',
-      description: '',
-      dueDate: '',
-      status: 'pending'
-    })
-    setSelectedTask(null)
-  }
-
-  const openCreateModal = () => {
-    setModalMode('create')
-    resetForm()
-    setIsModalOpen(true)
-  }
-
-  const openEditModal = (task) => {
-    setModalMode('edit')
-    setSelectedTask(task)
-    setFormData({
-      title: task.title,
-      description: task.description,
-      dueDate: task.dueDate?.split('T')[0] || '',
-      status: task.status
-    })
-    setIsModalOpen(true)
-  }
+  const getPriorityIcon = (priority) => {
+    return null; // You can implement priority icons if needed
+  };
 
   if (!user && !loading) {
     return <div className="p-6">User not found</div>
@@ -167,7 +135,7 @@ function SingleUser() {
               {user?.role}
             </span>
           </div>
-          <Button onClick={openCreateModal}>
+          <Button onClick={() => setShowTaskForm(true)}>
             <Plus className="w-4 h-4 mr-2" />
             Assign New Task
           </Button>
@@ -193,9 +161,9 @@ function SingleUser() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="todo">To Do</SelectItem>
                   <SelectItem value="in-progress">In Progress</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="done">Done</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={sortBy} onValueChange={setSortBy}>
@@ -218,47 +186,23 @@ function SingleUser() {
           </div>
         </div>
         
-        <div className="divide-y divide-gray-200">
+        <div className="grid gap-4 p-4">
           {loading ? (
             <div className="p-6 text-center">Loading tasks...</div>
           ) : tasks?.length === 0 ? (
             <div className="p-6 text-center text-gray-500">No tasks assigned</div>
           ) : (
             tasks.map((task) => (
-              <div key={task._id} className="p-6">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="text-lg font-semibold mb-2">{task.title}</h3>
-                    <p className="text-gray-600 mb-2">{task.description}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(task.dueDate).toLocaleDateString()}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        Status: {task.status}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      onClick={() => openEditModal(task)}
-                      className="text-indigo-600 hover:text-indigo-900"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      onClick={() => handleDeleteTask(task._id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
+              <TaskCard
+                key={task._id}
+                task={task}
+                canEdit={true}
+                onTaskDeleted={handleTaskDeleted}
+                onTaskUpdated={handleTaskUpdated}
+                getStatusColor={getStatusColor}
+                getPriorityColor={getPriorityColor}
+                getPriorityIcon={getPriorityIcon}
+              />
             ))
           )}
         </div>
@@ -291,74 +235,26 @@ function SingleUser() {
         </div>
       )}
 
-      {/* Create/Edit Task Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">
-              {modalMode === 'create' ? 'Assign New Task' : 'Edit Task'}
-            </h2>
-            <form onSubmit={modalMode === 'create' ? handleCreateTask : handleUpdateTask}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Title
-                  </label>
-                  <Input
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Description
-                  </label>
-                  <Textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Due Date
-                  </label>
-                  <Input
-                    type="date"
-                    value={formData.dueDate}
-                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">
-                    Status
-                  </label>
-                  <Select 
-                    value={formData.status} 
-                    onValueChange={(value) => setFormData({ ...formData, status: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="in-progress">In Progress</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end space-x-3">
-                <Button type="button" variant="outline" onClick={() => setIsModalOpen(false)}>
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {modalMode === 'create' ? 'Create Task' : 'Update Task'}
+      {/* Create Task Modal */}
+      {showTaskForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Create New Task</h3>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setShowTaskForm(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  ×
                 </Button>
               </div>
-            </form>
+              <TaskForm
+                onTaskCreated={handleTaskCreated}
+                defaultAssignedTo={id}
+              />
+            </div>
           </div>
         </div>
       )}

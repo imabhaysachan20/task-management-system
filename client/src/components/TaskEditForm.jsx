@@ -26,7 +26,7 @@ export default function TaskEditForm({ task, onTaskUpdated, onCancel }) {
 
   const fetchUsers = async () => {
     try {
-      const res = await API.get("/users");
+      const res = await API.get("/users/all");
       setUsers(res.data || []);
     } catch (err) {
       console.error("Failed to fetch users:", err);
