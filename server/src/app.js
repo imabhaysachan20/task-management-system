@@ -12,11 +12,14 @@ app.use(cors())
 app.use(express.json())
 
 
+app.get("/health",(req,res)=>{
+  res.json("working!")
+})
+
 app.use("/uploads", express.static("uploads"));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
-
 
 
 
