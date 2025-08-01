@@ -148,7 +148,7 @@ function AdminDashboard() {
     <div className="space-y-4 sm:space-y-6">
       {/* Header with Create Task Button */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
+        <div className='hidden sm:block'>
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Task Management</h2>
           <p className="text-sm sm:text-base text-gray-600 mt-1">Manage your tasks and assignments</p>
         </div>
