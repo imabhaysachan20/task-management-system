@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Upload, X, FileText } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function TaskForm({ onTaskCreated }) {
   const [formData, setFormData] = useState({
@@ -15,6 +16,9 @@ export default function TaskForm({ onTaskCreated }) {
     dueDate: "",
     assignedTo: ""
   });
+  const {user} = useAuth();
+  
+  const isadmin = user?.role === "admin";
   const [documents, setDocuments] = useState([]);
   const [users, setUsers] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,7 +30,7 @@ export default function TaskForm({ onTaskCreated }) {
 
   const fetchUsers = async () => {
     try {
-      const res = await API.get("/users");
+      const res = await API.get("/users/all");
       setUsers(res.data || []);
     } catch (err) {
       console.error("Failed to fetch users:", err);
@@ -215,7 +219,7 @@ export default function TaskForm({ onTaskCreated }) {
           />
         </div>
 
-        <div>
+        {isadmin && <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Assign To
           </label>
@@ -232,7 +236,7 @@ export default function TaskForm({ onTaskCreated }) {
               ))}
             </SelectContent>
           </Select>
-        </div>
+          </div>}
       </div>
 
       {/* Document Upload */}
