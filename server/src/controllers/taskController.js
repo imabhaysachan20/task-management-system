@@ -3,7 +3,10 @@ const Task = require("../models/Task");
 
 exports.createTask = async (req, res) => {
   try {
-    const filePaths = req.files?.map((f) => f.path) || [];
+    const filePaths = req.files?.map((f) => {
+  const fileName = f.filename || f.path.split("\\").pop();
+  return `/uploads/${fileName}`;
+}) || [];
 
     const task = await Task.create({
       ...req.body,
@@ -81,7 +84,10 @@ if (req.user.role !== "admin" && task.assignedTo.toString() !== req.user.userId)
   return res.status(403).json({ error: "Forbidden" });
 }
 
-    const filePaths = req.files?.map((f) => f.path) || [];
+    const filePaths = req.files?.map((f) => {
+  const fileName = f.filename || f.path.split("\\").pop(); // for Windows
+  return `/uploads/${fileName}`;
+}) || [];
     const updatedFields = {
       ...req.body,
       documents: [...(task.documents || []), ...filePaths].slice(0, 3)

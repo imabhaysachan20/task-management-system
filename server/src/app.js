@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors")
+const path = require("path");
 const mongoose = require("mongoose")
 require("dotenv").config()
 const authRoutes = require("./routes/authRoutes")
@@ -16,7 +17,7 @@ app.get("/health",(req,res)=>{
   res.json("working!")
 })
 
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
