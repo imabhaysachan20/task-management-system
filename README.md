@@ -10,6 +10,9 @@ A full-stack task management application built with React, Node.js, and MongoDB.
   - Role-based access control (Admin/User)
   - Protected routes and middleware
 
+![image](https://i.ibb.co/Sww2D2Lr/image.png)
+![image](https://i.ibb.co/TMqr5K1P/image.png)
+
 - **Task Management**
   - Create, read, update, and delete tasks
   - Task status tracking (Todo, In Progress, Done)
@@ -18,6 +21,10 @@ A full-stack task management application built with React, Node.js, and MongoDB.
   - Task assignment to users
   - File/document uploads for tasks
 
+![image](https://i.ibb.co/wNHHzwzm/image.png)
+
+
+
 - **Dashboard Features**
   - **Admin Dashboard**: Manage all tasks and users
   - **User Dashboard**: View assigned tasks and personal tasks
@@ -25,10 +32,20 @@ A full-stack task management application built with React, Node.js, and MongoDB.
   - Pagination support
   - Real-time task updates
 
+![image](https://i.ibb.co/1YmwFd5N/image.png)
+
+
+
+
+
 - **User Management** (Admin only)
   - View all users
   - Manage user roles
   - User-specific task views
+
+![image](https://i.ibb.co/5WD9nqzC/image.png)
+![image](https://i.ibb.co/LdxPph2h/image.png)
+
 
 ### Technical Features
 - **Frontend**: React 19 with Vite, Tailwind CSS, Radix UI
