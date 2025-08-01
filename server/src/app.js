@@ -7,11 +7,9 @@ const authRoutes = require("./routes/authRoutes")
 const taskRoutes = require("./routes/taskRoutes");
 const userRoutes = require("./routes/userRoutes");
 
-
 const app = express();
 app.use(cors())
 app.use(express.json())
-
 
 app.get("/health",(req,res)=>{
   res.json("working!")
@@ -22,13 +20,15 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/tasks", taskRoutes);
 
+// Only connect to MongoDB and start server if this file is run directly
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  mongoose
+    .connect(process.env.MONGO_URI)
+    .then(() => {
+      app.listen(PORT, () => console.log(`Server running on ${PORT}`))
+    })
+    .catch((err) => console.error("MongoDB connection error", err));
+}
 
-
-const PORT = process.env.PORT || 3000
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    app.listen(PORT, () => console.log(`Server running on ${PORT}`))
-  })
-  .catch((err) => console.error("MongoDB connection error", err))
+module.exports = app;
