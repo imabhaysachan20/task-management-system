@@ -14,9 +14,9 @@ import {
 import API from '@/lib/axios';
 import TaskEditForm from './TaskEditForm';
 import axios from 'axios';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const StaticAPI = axios.create({
-  baseURL: "http://localhost:3000/", 
+  baseURL: apiUrl, 
 });
 
 function TaskCard({ 
