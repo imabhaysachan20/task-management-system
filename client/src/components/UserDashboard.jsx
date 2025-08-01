@@ -144,16 +144,16 @@ function UserDashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header with Create Task Button */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Task Management</h2>
-          <p className="text-gray-600 mt-1">Manage your tasks and assignments</p>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Task Management</h2>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Manage your tasks and assignments</p>
         </div>
         <Button 
           onClick={() => setShowTaskForm(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Create Task
@@ -162,9 +162,9 @@ function UserDashboard() {
 
       {/* Task Form Modal */}
       {showTaskForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Create New Task</h3>
                 <Button 
@@ -183,10 +183,10 @@ function UserDashboard() {
 
       {/* Tabs */}
       <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8">
+        <nav className="-mb-px flex overflow-x-auto space-x-4 sm:space-x-8">
           <button
             onClick={() => setActiveTab('my-tasks')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'my-tasks'
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -196,7 +196,7 @@ function UserDashboard() {
           </button>
           <button
             onClick={() => setActiveTab('assigned-tasks')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
               activeTab === 'assigned-tasks'
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -208,8 +208,8 @@ function UserDashboard() {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white rounded-lg shadow-sm border p-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="bg-white rounded-lg shadow-sm border p-3 sm:p-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
             <div className="relative">
@@ -283,7 +283,7 @@ function UserDashboard() {
             <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
           </div>
         ) : filteredTasks.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-12 px-4">
             <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
               {activeTab === 'my-tasks' ? 'No tasks created yet' : 'No tasks assigned to you'}
@@ -296,8 +296,8 @@ function UserDashboard() {
             </p>
           </div>
         ) : (
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="p-3 sm:p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
               {filteredTasks.map((task) => (
                 <TaskCard 
                   key={task._id} 
@@ -317,8 +317,8 @@ function UserDashboard() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between bg-white rounded-lg shadow-sm border p-4">
-          <div className="text-sm text-gray-700">
+        <div className="flex flex-col sm:flex-row items-center justify-between bg-white rounded-lg shadow-sm border p-3 sm:p-4 gap-4">
+          <div className="text-sm text-gray-700 text-center sm:text-left">
             Showing {((currentPage - 1) * limit) + 1} to {Math.min(currentPage * limit, totalTasks)} of {totalTasks} tasks
           </div>
           <div className="flex items-center gap-2">
@@ -329,7 +329,7 @@ function UserDashboard() {
               disabled={currentPage === 1}
             >
               <ChevronLeft className="w-4 h-4" />
-              Previous
+              <span className="hidden sm:inline">Previous</span>
             </Button>
             
             <div className="flex items-center gap-1">
@@ -365,7 +365,7 @@ function UserDashboard() {
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
             >
-              Next
+              <span className="hidden sm:inline">Next</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>

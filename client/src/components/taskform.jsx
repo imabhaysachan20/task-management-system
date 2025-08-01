@@ -144,7 +144,7 @@ export default function TaskForm({ onTaskCreated }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
       {/* Title */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -172,7 +172,7 @@ export default function TaskForm({ onTaskCreated }) {
       </div>
 
       {/* Status and Priority */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Status
@@ -207,7 +207,7 @@ export default function TaskForm({ onTaskCreated }) {
       </div>
 
       {/* Due Date and Assigned To */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Due Date
@@ -247,7 +247,7 @@ export default function TaskForm({ onTaskCreated }) {
         
         {/* Drop Zone */}
         <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+          className={`border-2 border-dashed rounded-lg p-4 sm:p-6 text-center transition-colors ${
             dragActive 
               ? 'border-blue-500 bg-blue-50' 
               : 'border-gray-300 hover:border-gray-400'
@@ -257,8 +257,8 @@ export default function TaskForm({ onTaskCreated }) {
           onDragOver={handleDrag}
           onDrop={handleDrop}
         >
-          <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-600 mb-2">
+          <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 mx-auto mb-2" />
+          <p className="text-sm sm:text-base text-gray-600 mb-2">
             Drag and drop PDF files here, or{" "}
             <label className="text-blue-600 hover:text-blue-700 cursor-pointer underline">
               browse
@@ -272,7 +272,7 @@ export default function TaskForm({ onTaskCreated }) {
               />
             </label>
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs sm:text-sm text-gray-500">
             {documents.length}/3 files selected
           </p>
         </div>
@@ -281,11 +281,11 @@ export default function TaskForm({ onTaskCreated }) {
         {documents.length > 0 && (
           <div className="mt-4 space-y-2">
             {documents.map((file, index) => (
-              <div key={index} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-red-600" />
-                  <span className="text-sm text-gray-700">{file.name}</span>
-                  <span className="text-xs text-gray-500">
+              <div key={index} className="flex items-center justify-between bg-gray-50 p-2 sm:p-3 rounded-lg">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <FileText className="w-4 h-4 text-red-600 flex-shrink-0" />
+                  <span className="text-sm text-gray-700 truncate">{file.name}</span>
+                  <span className="text-xs text-gray-500 flex-shrink-0">
                     ({(file.size / 1024 / 1024).toFixed(2)} MB)
                   </span>
                 </div>
@@ -294,7 +294,7 @@ export default function TaskForm({ onTaskCreated }) {
                   variant="ghost"
                   size="sm"
                   onClick={() => removeFile(index)}
-                  className="text-red-600 hover:text-red-700 p-1"
+                  className="text-red-600 hover:text-red-700 p-1 ml-2"
                 >
                   <X className="w-4 h-4" />
                 </Button>
@@ -309,7 +309,7 @@ export default function TaskForm({ onTaskCreated }) {
         <Button
           type="submit"
           disabled={isSubmitting || !formData.title.trim()}
-          className="min-w-[120px]"
+          className="w-full sm:w-auto min-w-[120px]"
         >
           {isSubmitting ? (
             <div className="flex items-center gap-2">

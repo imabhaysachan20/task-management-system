@@ -75,24 +75,25 @@ function TaskCard({
   console.log(task)
   return (
     <>
-      <div className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div className="bg-white border rounded-lg p-3 sm:p-4 hover:shadow-md transition-shadow">
         {/* Header */}
         <div className="flex justify-between items-start mb-3">
-          <div className="flex-1">
-            <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">{task.title}</h3>
-            <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2 text-sm sm:text-base">{task.title}</h3>
+            <div className="flex flex-wrap items-center gap-1 sm:gap-2">
               <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
                 {task.status.replace('-', ' ').toUpperCase()}
               </span>
               <span className={`px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${getPriorityColor(task.priority)}`}>
                 {getPriorityIcon(task.priority)}
-                {task.priority.toUpperCase()}
+                <span className="hidden sm:inline">{task.priority.toUpperCase()}</span>
+                <span className="sm:hidden">{task.priority.charAt(0).toUpperCase()}</span>
               </span>
             </div>
           </div>
           
           {canEdit && (
-            <div className="relative">
+            <div className="relative ml-2">
               <Button
                 variant="ghost"
                 size="sm"
@@ -139,21 +140,21 @@ function TaskCard({
         {/* Due Date */}
         {task.dueDate && (
           <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-            <Calendar className="w-4 h-4" />
-            <span>Due: {formatDate(task.dueDate)}</span>
+            <Calendar className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Due: {formatDate(task.dueDate)}</span>
           </div>
         )}
 
         {/* Assignment Info */}
         <div className="space-y-2 mb-3">
           <div className="flex items-center gap-2 text-sm text-gray-500">
-            <User className="w-4 h-4" />
-            <span>Created by: {task.createdBy.email}</span>
+            <User className="w-4 h-4 flex-shrink-0" />
+            <span className="truncate">Created by: {task.createdBy.email}</span>
           </div>
           {task.assignedTo._id !== task.createdBy._id && (
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <User className="w-4 h-4" />
-              <span>Assigned to: {task.assignedTo.email}</span>
+              <User className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">Assigned to: {task.assignedTo.email}</span>
             </div>
           )}
         </div>
@@ -162,7 +163,7 @@ function TaskCard({
         {task.documents && task.documents.length > 0 && (
           <div className="border-t pt-3">
             <div className="flex items-center gap-2 text-sm text-gray-700 mb-2">
-              <FileText className="w-4 h-4" />
+              <FileText className="w-4 h-4 flex-shrink-0" />
               <span>Documents ({task.documents.length})</span>
             </div>
             <div className="space-y-1">
@@ -171,10 +172,10 @@ function TaskCard({
                 <button
                   key={index}
                   onClick={() => handleDownloadDocument(doc)}
-                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                  className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline w-full text-left"
                 >
-                  <Download className="w-3 h-3" />
-                  {doc.split('/').pop()}
+                  <Download className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">{doc.split('/').pop()}</span>
                 </button>
               ))}
             </div>
@@ -189,9 +190,9 @@ function TaskCard({
 
       {/* Edit Form Modal */}
       {showEditForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold">Edit Task</h3>
                 <Button 

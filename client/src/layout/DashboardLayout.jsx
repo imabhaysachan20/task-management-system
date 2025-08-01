@@ -6,9 +6,9 @@ export default function DashboardLayout() {
     <>
       <Header />
       <div className="min-h-screen bg-gray-50">
-      <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <Outlet />
-      </main>
+        <main className="max-w-7xl mx-auto py-4 sm:py-6 lg:py-8 px-2 sm:px-4 lg:px-8">
+          <Outlet />
+        </main>
       </div>
     </>
   );
