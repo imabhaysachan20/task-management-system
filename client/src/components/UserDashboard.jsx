@@ -28,7 +28,7 @@ function UserDashboard() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
-  const [activeTab, setActiveTab] = useState('my-tasks'); // 'my-tasks' or 'assigned-tasks'
+  const [activeTab, setActiveTab] = useState('assigned-tasks'); // 'my-tasks' or 'assigned-tasks'
   
   // Pagination and filtering state
   const [currentPage, setCurrentPage] = useState(1);
