@@ -57,6 +57,45 @@ exports.getTasks = async (req, res) => {
 
 
 
+exports.getTasksOfUser = async (req, res) => {
+  try {
+    // Verify admin status
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ error: "Only admins can access other users' tasks" });
+    }
+
+    const { page = 1, limit = 10, status, sortBy = "createdAt", order = "desc" } = req.query;
+    const userId = req.params.id;
+
+    // Build query
+    const query = { assignedTo: userId };
+    if (status) query.status = status;
+
+    // Get tasks with pagination and sorting
+    const tasks = await Task.find(query)
+      .populate([
+        { path: "createdBy", select: "email" },
+        { path: "assignedTo", select: "email" }
+      ])
+      .sort({ [sortBy]: order === "asc" ? 1 : -1 })
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit));
+
+    // Get total count for pagination
+    const total = await Task.countDocuments(query);
+
+    res.json({
+      tasks,
+      currentPage: Number(page),
+      totalPages: Math.ceil(total / Number(limit)),
+      totalTasks: total
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not fetch user's tasks" });
+  }
+};
+
 exports.getTaskById = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import API from '@/lib/axios'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -172,7 +173,14 @@ function ManageUser() {
             ) : (
               users.map((user) => (
                 <tr key={user._id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <Link 
+                      to={`/dashboard/${user._id}`} 
+                      className="text-indigo-600 hover:text-indigo-900 hover:underline"
+                    >
+                      {user.email}
+                    </Link>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-green-100 text-green-800'

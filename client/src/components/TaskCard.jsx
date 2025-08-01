@@ -72,7 +72,7 @@ function TaskCard({
       day: 'numeric'
     });
   };
-
+  console.log(task)
   return (
     <>
       <div className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow">
