@@ -10,8 +10,14 @@ import {
   MoreVertical,
   Eye
 } from 'lucide-react';
+
 import API from '@/lib/axios';
 import TaskEditForm from './TaskEditForm';
+import axios from 'axios';
+
+const StaticAPI = axios.create({
+  baseURL: "http://localhost:3000/", 
+});
 
 function TaskCard({ 
   task, 
@@ -42,7 +48,9 @@ function TaskCard({
 
   const handleDownloadDocument = async (documentPath) => {
     try {
-      const response = await API.get(`/${documentPath}`, { responseType: 'blob' });
+      
+      
+      const response = await axios.get(`http://localhost:3000${documentPath}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -159,6 +167,7 @@ function TaskCard({
             </div>
             <div className="space-y-1">
               {task.documents.map((doc, index) => (
+                
                 <button
                   key={index}
                   onClick={() => handleDownloadDocument(doc)}

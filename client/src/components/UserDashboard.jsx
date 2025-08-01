@@ -38,8 +38,8 @@ function UserDashboard() {
   
   // Filter and sort state
   const [filters, setFilters] = useState({
-    status: '',
-    priority: '',
+    status: 'all',
+    priority: 'all',
     sortBy: 'createdAt',
     order: 'desc',
     search: ''
@@ -56,8 +56,8 @@ function UserDashboard() {
         ...filterOverrides
       });
 
-      if (filters.status) params.append('status', filters.status);
-      if (filters.priority) params.append('priority', filters.priority);
+      if (filters.status && filters.status !== 'all') params.append('status', filters.status);
+      if (filters.priority && filters.priority !== 'all') params.append('priority', filters.priority);
 
       const res = await API.get(`/tasks?${params}`);
       const data = res.data;
@@ -230,7 +230,7 @@ function UserDashboard() {
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Status</SelectItem>
+                <SelectItem value="all">All Status</SelectItem>
                 <SelectItem value="todo">To Do</SelectItem>
                 <SelectItem value="in-progress">In Progress</SelectItem>
                 <SelectItem value="done">Done</SelectItem>
@@ -245,7 +245,7 @@ function UserDashboard() {
                 <SelectValue placeholder="All Priority" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Priority</SelectItem>
+                <SelectItem value="all">All Priority</SelectItem>
                 <SelectItem value="low">Low</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="high">High</SelectItem>
