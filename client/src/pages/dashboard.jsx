@@ -5,28 +5,19 @@ import { LogOut, Rss, User } from "lucide-react";
 import TaskList from "@/components/TaskList";
 import TaskForm from "@/components/TaskForm";
 import API from "@/lib/axios";
+import AdminDashboard from "@/components/AdminDashboard";
+import UserDashboard from "@/components/UserDashboard";
 
 export default function Dashboard() {
-  const [tasks, setTasks] = useState([]);
+  
   const { user, logout } = useAuth();
 
-  const fetchTasks = async () => {
-    try {
-      const res = await API.get("/tasks");
-      console.log(res)
-      setTasks(res.data.tasks);
-    } catch (err) {
-      alert("Failed to fetch tasks");
-    }
-  };
-
+ 
   const handleLogout = () => {
     logout();
   };
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+ 
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -63,17 +54,7 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Create New Task</h2>
-            <TaskForm onTaskCreated={fetchTasks} />
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Tasks</h2>
-            <TaskList tasks={tasks} onTaskDeleted={fetchTasks} />
-          </div>
-        </div>
+        {user?.role && user.role ==="admin"?<AdminDashboard/>:<UserDashboard/>}
       </main>
     </div>
   );

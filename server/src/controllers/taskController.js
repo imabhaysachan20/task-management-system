@@ -34,7 +34,10 @@ exports.getTasks = async (req, res) => {
     const tasks = await Task.find(query)
       .sort({ [sortBy]: order === "asc" ? 1 : -1 })
       .skip((page - 1) * limit)
-      .limit(Number(limit));
+      .limit(Number(limit)).populate([
+    { path: "createdBy", select: "email" },
+    { path: "assignedTo", select: "email" }
+  ]);
 
     const count = await Task.countDocuments(query);
 
