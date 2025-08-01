@@ -8,8 +8,8 @@ exports.createUser = async (req, res) => {
     const existing = await User.findOne({ email });
     if (existing) return res.status(400).json({ error: "Email already in use" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, password: hashedPassword, role });
+    
+    const user = await User.create({ email, password, role });
 
     res.status(201).json({ message: "User created", user });
   } catch (err) {
@@ -19,7 +19,32 @@ exports.createUser = async (req, res) => {
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password"); 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // Get total count for pagination
+    const totalUsers = await User.countDocuments();
+
+    // Get paginated users
+    const users = await User.find()
+      .select("-password")
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      users,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
+      totalUsers
+    });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+};
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch users" });

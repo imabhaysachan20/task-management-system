@@ -6,6 +6,7 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  getAllUsers,
 } = require("../controllers/userController");
 const { authMiddleware, adminAuthMiddleware } = require("../middleware/authMiddleware");
 
@@ -14,6 +15,7 @@ router.use(adminAuthMiddleware);
 
 router.post("/", createUser);        
 router.get("/", getUsers);           
+router.get("/all", getAllUsers);           
 router.get("/:id", getUserById);     
 router.put("/:id", updateUser);      
 router.delete("/:id", deleteUser);   

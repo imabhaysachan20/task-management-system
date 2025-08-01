@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import TaskForm from './TaskForm';
 import TaskCard from './TaskCard';
+import ManageUser from './ManageUser';
 
 function AdminDashboard() {
   const { user } = useAuth();
@@ -204,11 +205,21 @@ function AdminDashboard() {
           >
             All Tasks ({tasks.length})
           </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+              activeTab === 'users'
+                ? 'border-blue-500 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Users
+          </button>
         </nav>
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white rounded-lg shadow-sm border p-4">
+      {activeTab !="users" && <><div className="bg-white rounded-lg shadow-sm border p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
@@ -302,7 +313,7 @@ function AdminDashboard() {
                 <TaskCard 
                   key={task._id} 
                   task={task} 
-                  canEdit={activeTab === 'my-tasks'}
+                  canEdit={true}
                   onTaskDeleted={handleTaskDeleted}
                   onTaskUpdated={() => fetchTasks(currentPage)}
                   getStatusColor={getStatusColor}
@@ -314,7 +325,7 @@ function AdminDashboard() {
           </div>
         )}
       </div>
-
+        
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between bg-white rounded-lg shadow-sm border p-4">
@@ -370,7 +381,9 @@ function AdminDashboard() {
             </Button>
           </div>
         </div>
-      )}
+      )}</>}
+
+      {activeTab=="users" && <ManageUser/>}
     </div>
   );
 }
