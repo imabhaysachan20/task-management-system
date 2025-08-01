@@ -103,8 +103,8 @@ function UserDashboard() {
     if (!tasks.length) return [];
     
     return tasks.filter(task => {
-      const isCreatedByUser = task.createdBy._id === user?.id;
-      const isAssignedToUser = task.assignedTo._id === user?.id;
+      const isCreatedByUser = task?.createdBy?._id === user?.id;
+      const isAssignedToUser = task?.assignedTo?._id === user?.id;
       
       if (activeTab === 'my-tasks') {
         return isCreatedByUser;
