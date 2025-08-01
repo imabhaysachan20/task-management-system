@@ -30,7 +30,9 @@ export default function TaskForm({ onTaskCreated }) {
 
   const fetchUsers = async () => {
     try {
+
       const res = await API.get("/users/all");
+      console.log(API)
       setUsers(res.data || []);
     } catch (err) {
       console.error("Failed to fetch users:", err);

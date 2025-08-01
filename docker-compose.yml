@@ -22,8 +22,6 @@ services:
       - /app/node_modules
     depends_on:
       - backend
-    environment:
-      - VITE_API_URL=http://localhost:3000/
 
   mongo:
     image: mongo
