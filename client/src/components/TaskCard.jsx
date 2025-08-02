@@ -49,8 +49,7 @@ function TaskCard({
 
   const handleDownloadDocument = async (documentPath) => {
     try {
-      
-      const apiUrl = import.meta.env.VITE_API_URL
+      let apiUrl = import.meta.env.VITE_API_URL
       apiUrl = apiUrl.substring(0, apiUrl.length - 1);
       apiUrl = `${apiUrl}${documentPath}`
       console.log(apiUrl)
