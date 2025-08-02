@@ -51,7 +51,8 @@ function TaskCard({
     try {
       
       const apiUrl = import.meta.env.VITE_API_URL
-      const response = await axios.get(`${apiUrl.replace("/","")}${documentPath}`, { responseType: 'blob' });
+      apiUrl = apiUrl.substring(0, apiUrl.length - 1);
+      const response = await axios.get(`${apiUrl}${documentPath}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
