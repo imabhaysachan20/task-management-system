@@ -43,10 +43,16 @@ export default function Login() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Task Manager</h1>
           <p className="text-gray-600">Sign in to your account to continue</p>
         </div>
-
+       <div className="bg-blue-50 border border-blue-200 text-sm text-blue-700 p-4 rounded-xl mb-6 shadow-sm">
+      <p className="font-semibold">🔑 Sample Credentials</p>
+      <div className="space-y-1">
+        <p><span className="font-medium">Admin:</span> admin@app.com / 123456</p>
+        <p><span className="font-medium">User:</span> user@app.com / 123456</p>
+      </div>
+    </div>
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
