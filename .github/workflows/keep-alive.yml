@@ -1,0 +1,13 @@
+name: Keep Render App Warm
+
+on:
+  schedule:
+    - cron: '*/20 * * * *' # every 5 minutes
+  workflow_dispatch:      
+
+jobs:
+  keep-warm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl Render Health Endpoint
+        run: curl -sSf https://task-management-system-api-x5ah.onrender.com/health || echo "Failed to reach endpoint"

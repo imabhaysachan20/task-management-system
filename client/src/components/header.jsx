@@ -2,6 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
   const { user, logout } = useAuth();
@@ -16,7 +17,9 @@ function Header() {
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
+            <Link to="/dashboard">
             <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">Task Manager</h1>
+            </Link>
           </div>
           
           {/* Desktop Menu */}
