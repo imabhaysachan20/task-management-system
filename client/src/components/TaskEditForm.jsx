@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Upload, X, FileText } from "lucide-react";
+import { toast } from "sonner";
 
 export default function TaskEditForm({ task, onTaskUpdated, onCancel }) {
   const [formData, setFormData] = useState({
@@ -45,11 +46,11 @@ export default function TaskEditForm({ task, onTaskUpdated, onCancel }) {
   const addFiles = (files) => {
     const validFiles = files.filter(file => {
       if (file.type !== 'application/pdf') {
-        alert(`${file.name} is not a PDF file`);
+        toast.error(`${file.name} is not a PDF file`);
         return false;
       }
       if (file.size > 5 * 1024 * 1024) {
-        alert(`${file.name} is larger than 5MB`);
+        toast.error(`${file.name} is larger than 5MB`);
         return false;
       }
       return true;
@@ -59,7 +60,7 @@ export default function TaskEditForm({ task, onTaskUpdated, onCancel }) {
     const availableSlots = 3 - currentDocCount;
     
     if (validFiles.length > availableSlots) {
-      alert(`Can only add ${availableSlots} more documents (max 3 total)`);
+      toast.error(`Can only add ${availableSlots} more documents (max 3 total)`);
       setDocuments(prev => [...prev, ...validFiles.slice(0, availableSlots)]);
     } else {
       setDocuments(prev => [...prev, ...validFiles]);
@@ -118,7 +119,7 @@ export default function TaskEditForm({ task, onTaskUpdated, onCancel }) {
 
       onTaskUpdated();
     } catch (err) {
-      alert(err.response?.data?.error || "Failed to update task");
+      toast.error(err.response?.data?.error || "Failed to update task");
     } finally {
       setIsSubmitting(false);
     }

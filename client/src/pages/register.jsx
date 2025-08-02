@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -33,12 +34,12 @@ export default function Register() {
     e.preventDefault();
     
     if (!isPasswordValid) {
-      alert("Please meet all password requirements");
+      toast.error("Please meet all password requirements");
       return;
     }
     
     if (!doPasswordsMatch) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
@@ -46,10 +47,10 @@ export default function Register() {
     
     try {
       await API.post("/auth/register", { email, password, role });
-      alert("Registration successful! You can now log in.");
+      toast.success("Registration successful! You can now log in.");
       navigate("/login");
     } catch (err) {
-      alert(err.response?.data?.error || "Registration failed");
+      toast.error(err.response?.data?.error || "Registration failed");
     } finally {
       setIsLoading(false);
     }

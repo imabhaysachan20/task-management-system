@@ -14,6 +14,7 @@ import {
 import API from '@/lib/axios';
 import TaskEditForm from './TaskEditForm';
 import axios from 'axios';
+import { toast } from 'sonner';
 const apiUrl = import.meta.env.VITE_API_URL;
 const StaticAPI = axios.create({
   baseURL: apiUrl, 
@@ -40,7 +41,7 @@ function TaskCard({
       await API.delete(`/tasks/${task._id}`);
       onTaskDeleted();
     } catch (err) {
-      alert('Failed to delete task');
+      toast.error('Failed to delete task');
     } finally {
       setIsDeleting(false);
     }
@@ -60,7 +61,7 @@ function TaskCard({
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch (err) {
-      alert('Failed to download document');
+      toast.error('Failed to download document');
     }
   };
 

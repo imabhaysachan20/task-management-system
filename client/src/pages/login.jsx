@@ -5,6 +5,7 @@ import API from "@/lib/axios";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -28,7 +29,7 @@ export default function Login() {
       login(token);
       navigate(from, { replace: true });
     } catch (err) {
-      alert(err.response?.data?.error || "Login failed");
+      toast.error(err.response?.data?.error || "Login failed");
     } finally {
       setIsLoading(false);
     }
