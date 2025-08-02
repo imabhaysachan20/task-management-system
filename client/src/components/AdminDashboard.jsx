@@ -26,6 +26,7 @@ import ManageUser from './ManageUser';
 
 function AdminDashboard() {
   const { user } = useAuth();
+  const [alltasks, setallTasks] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
@@ -64,6 +65,7 @@ function AdminDashboard() {
       const data = res.data;
       console.log(data)
       setTasks(data.tasks || []);
+      setallTasks(data.tasks || []);
       setTotalTasks(data.total || 0);
       setTotalPages(Math.ceil((data.total || 0) / limit));
       setCurrentPage(page);
@@ -227,8 +229,10 @@ function AdminDashboard() {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 placeholder="Search tasks..."
-                value={filters.search}
-                onChange={(e) => handleFilterChange('search', e.target.value)}
+                onChange={(e)=>{
+                  const value = e.target.value.toLowerCase();
+                  setTasks(alltasks.filter(t => t.title.toLowerCase().includes(value)));
+                }}
                 className="pl-10"
               />
             </div>

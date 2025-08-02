@@ -26,6 +26,7 @@ import TaskCard from './TaskCard';
 function UserDashboard() {
   const { user } = useAuth();
   const [tasks, setTasks] = useState([]);
+  const [alltasks, setallTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [activeTab, setActiveTab] = useState('assigned-tasks'); // 'my-tasks' or 'assigned-tasks'
@@ -63,6 +64,7 @@ function UserDashboard() {
       const data = res.data;
       
       setTasks(data.tasks || []);
+      setallTasks(data.tasks || []);
       setTotalTasks(data.total || 0);
       setTotalPages(Math.ceil((data.total || 0) / limit));
       setCurrentPage(page);
@@ -215,11 +217,13 @@ function UserDashboard() {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
-                placeholder="Search tasks..."
-                value={filters.search}
-                onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="pl-10"
-              />
+                              placeholder="Search tasks..."
+                              onChange={(e)=>{
+                                const value = e.target.value.toLowerCase();
+                                setTasks(alltasks.filter(t => t.title.toLowerCase().includes(value)));
+                              }}
+                              className="pl-10"
+                            />
             </div>
           </div>
           
