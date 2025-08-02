@@ -50,8 +50,8 @@ function TaskCard({
   const handleDownloadDocument = async (documentPath) => {
     try {
       
-      
-      const response = await axios.get(`http://localhost:3000${documentPath}`, { responseType: 'blob' });
+      const apiUrl = import.meta.env.VITE_API_URL
+      const response = await axios.get(`${apiUrl}${documentPath}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
