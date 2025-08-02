@@ -6,15 +6,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { Textarea } from "./ui/textarea";
 import { Upload, X, FileText } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
-export default function TaskForm({ onTaskCreated }) {
+export default function TaskForm({ onTaskCreated,defaultAssignedTo }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     status: "todo",
     priority: "medium",
     dueDate: "",
-    assignedTo: ""
+    assignedTo: defaultAssignedTo ?? ""
   });
   const {user} = useAuth();
   
@@ -26,6 +27,7 @@ export default function TaskForm({ onTaskCreated }) {
 
   useEffect(() => {
     fetchUsers();
+    
   }, []);
 
   const fetchUsers = async () => {
@@ -49,11 +51,11 @@ export default function TaskForm({ onTaskCreated }) {
   const addFiles = (files) => {
     const validFiles = files.filter(file => {
       if (file.type !== 'application/pdf') {
-        alert(`${file.name} is not a PDF file`);
+        toast.error(`${file.name} is not a PDF file`);
         return false;
       }
       if (file.size > 5 * 1024 * 1024) {
-        alert(`${file.name} is larger than 5MB`);
+        toast.error(`${file.name} is larger than 5MB`);
         return false;
       }
       return true;
@@ -62,7 +64,7 @@ export default function TaskForm({ onTaskCreated }) {
     setDocuments(prev => {
       const newFiles = [...prev, ...validFiles];
       if (newFiles.length > 3) {
-        alert("Maximum 3 documents allowed");
+        toast.error("Maximum 3 documents allowed");
         return newFiles.slice(0, 3);
       }
       return newFiles;
@@ -137,7 +139,7 @@ export default function TaskForm({ onTaskCreated }) {
       
       onTaskCreated();
     } catch (err) {
-      alert(err.response?.data?.error || "Failed to create task");
+      toast.error(err.response?.data?.error || "Failed to create task");
     } finally {
       setIsSubmitting(false);
     }
