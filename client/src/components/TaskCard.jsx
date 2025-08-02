@@ -51,7 +51,7 @@ function TaskCard({
     try {
       
       const apiUrl = import.meta.env.VITE_API_URL
-      const response = await axios.get(`${apiUrl}${documentPath}`, { responseType: 'blob' });
+      const response = await axios.get(`${apiUrl.replace("/","")}${documentPath}`, { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -191,7 +191,7 @@ function TaskCard({
 
       {/* Edit Form Modal */}
       {showEditForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+        <div onClick={(e)=>{if (e.target=e.currentTarget) {setShowEditForm(false)}}} className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
           <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-4 sm:p-6">
               <div className="flex justify-between items-center mb-4">
