@@ -1,8 +1,25 @@
-# Task Management System
+---
 
-A full-stack task management application built with React, Node.js, and MongoDB. This system provides role-based access control with admin and user functionalities, task management with file uploads, and a modern responsive UI.
+## 🔗 Live Demo
 
-🔗 **[Live Demo](https://task-management-system-ivory-three.vercel.app/)**
+👉👉 **[Click here to view the live site](https://task-management-system-ivory-three.vercel.app/)** 👈👈
+
+[![Live Demo Badge](https://img.shields.io/badge/Live-Demo-0070f3?style=for-the-badge&logo=vercel&logoColor=white)](https://task-management-system-ivory-three.vercel.app/)
+
+---
+
+# 🚀 Task Management System
+
+A full-stack task management application built with **React**, **Node.js**, and **MongoDB**.
+
+This system provides:
+
+- ✅ Role-based access control (Admin & User)
+- 📋 Task management with file uploads
+- 💻 Modern, responsive UI
+
+
+
 
 ## 🚀 Features
 
